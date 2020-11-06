@@ -1,0 +1,47 @@
+env:
+  - GO111MODULE=on
+before:
+  hooks:
+    - go mod download
+    - make gen-proto
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+    targets:
+      - linux_amd64
+    main: server/server.go
+    binary: "lbost1au"
+
+nfpms:
+  - id: 1
+    package_name: lbost1au
+    file_name_template: "lbost1au_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+    vendor: khannz
+    homepage: https://github.com/khannz/super-duper-spork
+    maintainer: Pavel Fiskovich <pavel.fiskovich@gmail.com>
+    description: lbost1au is a microservice that allow to fake accounting of ifaces bandwidth
+    license: Apache-2.0
+    formats:
+      - rpm
+    bindir: /usr/local/bin
+    overrides:
+      rpm:
+        replacements:
+          amd64: x86_64
+        files:
+          bundle/rpm.lbost1au.service: "/lib/systemd/system/lbost1au.service"
+        scripts:
+          preinstall: "bundle/rpm.lbost1au.preinstall.sh"
+          postinstall: "bundle/rpm.lbost1au.postinstall.sh"
+          preremove: "bundle/rpm.lbost1au.preremove.sh"
+          postremove: "bundle/rpm.lbost1au.postremove.sh"
+
+archives:
+  - name_template: 'lbost1au_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    replacements:
+      amd64: x86_64

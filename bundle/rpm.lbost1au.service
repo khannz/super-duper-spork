@@ -1,0 +1,19 @@
+[Unit]
+Description=LBOS T1 Utilisation Accounter
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+
+Restart=on-failure
+RestartSec=10
+
+#ExecStartPre=mkdir -p /var/run/lbost1au
+ExecStart=/usr/local/bin/lbost1au --limit=1000 --port=3009 --data-prefix=/var/run/lbost1au
+
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target

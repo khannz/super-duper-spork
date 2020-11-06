@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = "github.com/khannz/super-duper-spork/sdslogic";
+
+package sdslogic;
+
+service Utilisator {
+  rpc GetUtilisation(UtilisationRequest) returns (UtilisationResponse) {}
+
+  rpc AddQuota(Quota) returns (QuotasSummary) {}
+  rpc DelQuota(QuotaId) returns (QuotasSummary) {}
+}
+
+message Quota {
+  string id = 1;
+//  reserved 1;
+  string rid = 2;
+  string owner = 3;
+  int32 size = 4;
+}
+
+message QuotaId {
+  string id = 1;
+  string rid = 2;
+}
+
+message QuotasSummary {
+//    string id = 1;
+  reserved 1;
+  string rid = 2;
+  repeated Quota quotas = 3;
+}
+
+message UtilisationRequest {
+  //  string id = 1;
+  reserved 1;
+  string rid = 2;
+}
+
+message UtilisationResponse {
+  //  string id = 1;
+  reserved 1;
+  string rid = 2;
+  string limit = 3;
+  string current = 4;
+}
